@@ -10,12 +10,14 @@ const restaurants = [
     { 
         id: 1,
         name: "Burger King",
-        street: "Av Hipolito Yrigoyen",
-        streetNumber: 2500,
-        neighbourhood: "Banfield",
-        state: "Lomas de Zamora",
-        province: "Buenos Aires",
-        country: "Argentina",
+        Direction: {
+            street: "Av Hipolito Yrigoyen",
+            streetNumber: 2500,
+            neighbourhood: "Banfield",
+            state: "Lomas de Zamora",
+            province: "Buenos Aires",
+            country: "Argentina",
+        },
         latitude:"51° 30' 30'' N",
         longitude: "0° 7' 32'' O",
         days: ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"],
@@ -24,19 +26,20 @@ const restaurants = [
         isClosed: false,
         photos:[],
         specialty: "rapida",
-        minPrice: 125,
-        maxPrice: 6000
+        range: "$$"
     },
 
     { 
         id: 2,
         name: "Starbucks",
-        street: "Colombres",
-        streetNumber: 200,
-        neighbourhood: "Las Lomitas",
-        state: "Lomas de Zamora",
-        province: "Buenos Aires",
-        country: "Argentina",
+        Direction: {
+            street: "Colombres",
+            streetNumber: 200,
+            neighbourhood: "Las Lomitas",
+            state: "Lomas de Zamora",
+            province: "Buenos Aires",
+            country: "Argentina",
+        },
         latitude:"51° 30' 30'' N",
         longitude: "0° 7' 32'' O",
         days: ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado"],
@@ -45,8 +48,7 @@ const restaurants = [
         isClosed: false,
         photos:[],
         specialty: "cafe",
-        minPrice: 250,
-        maxPrice: 4000
+        range: "$$$"
     }
 ];
 
@@ -67,12 +69,14 @@ app.post('/api/v1/restaurants', (req, res) => {
     const restaurant = {
         id: restaurants.length + 1,
         name: req.body.name,
-        street: req.body.street,
-        streetNumber: req.body.streetNumber,
-        neighbourhood: req.body.neighbourhood,
-        state: req.body.state,
-        province: req.body.province,
-        country: req.body.country,
+        Direction: {
+            street: req.body.Direction.street,
+            streetNumber: req.body.Direction.streetNumber,
+            neighbourhood: req.body.Direction.neighbourhood,
+            state: req.body.Direction.state,
+            province: req.body.Direction.province,
+            country: req.body.Direction.country,
+        },
         latitude: req.body.latitude,
         longitude: req.body.longitude,
         days: req.body.days,
@@ -94,12 +98,12 @@ app.put('/api/v1/restaurants/:id', (req, res) => {
     const {error} = validateRestaurant(req.body);
     if(error) return res.status(400).send(error.details[0].message);
     restaurant.name = req.body.name;
-    restaurant.street = req.body.street;
-    restaurant.streetNumber = req.body.streetNumber;
-    restaurant.neighbourhood = req.body.neighbourhood;
-    restaurant.state = req.body.state;
-    restaurant.province = req.body.province;
-    restaurant.country = req.body.country;
+    restaurant.Direction.street = req.body.street;
+    restaurant.Direction.streetNumber = req.body.streetNumber;
+    restaurant.Direction.neighbourhood = req.body.neighbourhood;
+    restaurant.Direction.state = req.body.state;
+    restaurant.Direction.province = req.body.province;
+    restaurant.Direction.country = req.body.country;
     restaurant.latitude = req.body.latitude;
     restaurant.longitude = req.body.longitude;
     restaurant.days = req.body.days;
@@ -126,12 +130,7 @@ app.delete('api/v1/restaurants/:id', (req, res) => {
 function validateRestaurant(restaurant){
     const schema = {
         name: Joi.string().min(1).required(),
-        street: Joi.string().min(3).required(),
-        streetNumber: Joi.number().integer().required(),
-        neighbourhood: Joi.string().min(3).required(),
-        state: Joi.string().min(3).required(),
-        province: Joi.string().min(3).required(),
-        country: Joi.string().min(3).required(),
+        Direction: Joi.object().pattern(/.*/, Joi.string(), Joi.number(), Joi.string(), Joi.string(), Joi.string(), Joi.string()),
         latitude: Joi.string().min(2).required(),
         longitude: Joi.string().min(2).required(),
         days: Joi.array().items(Joi.string()).required(),
