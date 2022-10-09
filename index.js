@@ -6,70 +6,119 @@ app.use(express.json());
 
 const port = process.env.PORT || 3000;
 
-const owners = [
-    { id: 1, email: "juan@mail.com", password: "1235"},
-    { id: 2, email: "maria@mail.com.ar", password: "hola"}
+const categorias = [
+    {
+        id: 1,
+        catName: "Entradas",
+        FoodItem: [
+            {
+                itemId: 1,
+                foodName: "Papas Fritas",
+                price: 800,
+                photos: ["papas.jpg"],
+                ingredients: [],
+                celiac: true,
+                vegan: true,
+                isDessert: false
+            },
+            {
+                id: 2,
+                foodName: "Rabas a la provenzal",
+                price: 1600,
+                photos: [],
+                ingredients: ["rabas", "provenzal"],
+                celiac: false,
+                vegan: false,
+                isDessert: false
+            }
+        ]
+    },
+
+    {
+        id: 2,
+        catName: "Bebidas",
+        DrinkItem: {
+            drinkId: 1,
+            drinkName: "Agua sin gas 500ml",
+            price: 300
+        },
+        DrinkItem: {
+            id: 2,
+            drinkName: "Agua con gas 500ml",
+            price: 300
+        }
+    }
 ];
 
-//prueba
-/*app.get('/', (req, res) => {
-    res.send("Hola mundo!");
-});*/
-
-app.get("/api/owners", (req, res) => {
-    res.send(owners);
+app.get('/api/v1/restaurants/1/menues/categories', (req, res) => {
+    res.send(categorias);
 });
 
-app.get('/api/owners/:id', (req, res) => {
-    const owner = owners.find(o => o.id === parseInt(req.params.id));
-    if(!owner) return res.status(404).send('El dueño no se encontró');
-    res.send(owner);
+app.get('/api/v1/restaurants/1/menues/categories/:id', (req, res) => {
+    const cat = categorias.find(c => c.id === parseInt(req.params.id));
+    if(!cat) return res.status(404).send("La categoría no se encontró");
+    res.send(cat);
 });
 
-app.post('/api/owners', (req, res) => {
-    const { error } = validateOwner(req.body);
+app.post('/api/v1/restaurants/1/menues/categories', (req, res) => {
+    const {error} = validateCategoria(req.body);
     if(error) return res.status(400).send(error.details[0].message);
-
-    const owner = {
-        id: owners.length + 1,
-        email: req.body.email,
-        password: req.body.password
+    
+    const categoria = {
+        id: categorias.length + 1,
+        catName: req.body.catName,
+        FoodItem: 
+        {
+            id: req.body.FoodItem.id,
+            foodName: req.body.FoodItem.foodName,
+            price: req.body.FoodItem.price,
+            photos: req.body.FoodItem.photos,
+            ingredients: req.body.FoodItem.ingredients,
+            celiac: req.body.FoodItem.celiac,
+            vegan: req.body.FoodItem.vegan,
+            isDessert: req.body.FoodItem.isDessert
+        }
     };
-    owners.push(owner);
-    res.send(owner); 
+    categorias.push(categoria);
+    res.send(categoria);
 });
 
-app.put('/api/owners/:id', (req, res) => {
-    const owner = owners.find(o => o.id === parseInt(req.params.id));
-    if(!owner) return res.status(400).send("El dueño no se encontró");
+app.put('/api/v1/restaurants/1/menues/categories/:id', (req, res) => {
+    const cat = categorias.find(c => c.id === parseInt(req.params.id));
+    if(!cat) return res.status(400).send("La categoría no se encontró");
 
-    const { error} = validateOwner(req.body);
+    const {error} = validateCategoria(req.body);
     if(error) return res.status(400).send(error.details[0].message);
-    owner.email = req.body.email;
-    owner.password = req.body.password;
+    cat.catName = req.body.catName;
+    cat.itemComida.nombre = req.body.itemComida.nombre;
+    cat.itemComida.price = req.body.itemComida.price;
+    cat.itemComida.photos = req.body.itemComida.photos;
+    cat.itemComida.ingredients = req.body.itemComida.ingredients;
+    cat.itemComida.celiac = req.body.itemComida.celiac;
+    cat.itemComida.vegan = req.body.itemComida.vegan;
+    cat.itemComida.isDessert = req.body.itemComida.isDessert;
 
-    res.send(owner);
-
+    res.send(cat);
 });
 
-app.delete('api/owners/:id', (req, res) => {
-    const owner = owners.find(o => o.id === parseInt(req.params.id));
-    if(!owner) return res.status(400).send("El dueño no se encontró");
+//FUNCIONA
+app.delete('/api/v1/restaurants/1/menues/categories/:id', (req, res) => {
+    const cat = categorias.find(c => c.id === parseInt(req.params.id));
+    if(!cat) return res.status(400).send("La categoría no se encontró");
 
-    const index = owners.indexOf(owner);
-    owners.slice(index, 1);
+    const index = categorias.indexOf(cat);
+    categorias.slice(index, 1);
 
-    res.send(owner);
+    res.send(cat);
 });
 
-function validateOwner(owner){
+function validateCategoria(cat){
     const schema = {
-        email: Joi.string().min(3).required().email(),
-        //email: Joi.string().email().required(),
-        password: Joi.string().min(4).required(),
+        nombre: Joi.string().min(2).required(),
+        itemComida: Joi.object().pattern(/.*/, [Joi.number(), Joi.string(), Joi.array().items(Joi.string()), Joi.array().items(Joi.string()), Joi.boolean(), Joi.boolean(), Joi.boolean()])
     };
 
-    return Joi.validate(owner, schema);
-}
+    return Joi.validate(cat, schema);
+};
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
