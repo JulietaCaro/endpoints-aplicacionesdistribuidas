@@ -48,7 +48,10 @@ const restaurants = [
         isClosed: false,
         photos:[],
         specialty: "cafe",
-        range: "$$$"
+        range: "$$$",
+        menu: {
+            
+        }
     }
 ];
 

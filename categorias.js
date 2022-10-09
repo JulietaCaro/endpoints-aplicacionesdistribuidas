@@ -71,16 +71,10 @@ app.post('/api/v1/restaurants/1/menues/categories', (req, res) => {
         {
             id: req.body.FoodItem.id,
             foodName: req.body.FoodItem.foodName,
-            price: req.body.FoodItem.price,
-            photos: req.body.FoodItem.photos,
-            ingredients: req.body.FoodItem.ingredients,
-            celiac: req.body.FoodItem.celiac,
-            vegan: req.body.FoodItem.vegan,
-            isDessert: req.body.FoodItem.isDessert
         }
     };
     categorias.push(categoria);
-    res.send(categoria);
+    res.send(categoria.id);
 });
 
 app.put('/api/v1/restaurants/1/menues/categories/:id', (req, res) => {
