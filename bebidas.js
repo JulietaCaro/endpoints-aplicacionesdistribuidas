@@ -10,14 +10,14 @@ const port = process.env.PORT || 3000;
 const itemBebidas = [
     {
         id: 1,
-        nombre: "Cerveza Quilmes",
-        precio: 560
+        name: "Cerveza Quilmes",
+        price: 560
     },
 
     {
         id: 2,
-        nombre: "Coca Cola 500ml",
-        precio: 250
+        name: "Coca Cola 500ml",
+        price: 250
     }
 ];
 
@@ -37,8 +37,8 @@ app.post('/api/v1/restaurants/1/menues/categories/1/drinks', (req, res) => {
 
     const item = {
         id: itemBebidas.length + 1,
-        nombre: req.body.nombre,
-        precio: req.body.precio
+        name: req.body.name,
+        price: req.body.price
     };
     itemBebidas.push(item);
     res.send(item);
@@ -50,8 +50,8 @@ app.put('/api/v1/restaurants/1/menues/categories/1/drinks/:id', (req, res) => {
 
     const {error}  = validateItem(req.body);
     if(error) return res.status(400).send(error.details[0].message);
-    item.nombre = req.body.nombre;
-    item.precio = req.body.precio;
+    item.name = req.body.name;
+    item.price = req.body.price;
 
     res.send(item);
 });
@@ -69,8 +69,8 @@ app.delete('/api/v1/restaurants/1/menues/categories/1/drinks/:id', (req, res) =>
 
 function validateItem(item){
     const schema = {
-        nombre: Joi.string().min(3).required(),
-        precio: Joi.number().required()
+        name: Joi.string().min(3).required(),
+        price: Joi.number().required()
     };
 
     return Joi.validate(item, schema);

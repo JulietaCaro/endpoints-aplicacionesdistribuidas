@@ -9,44 +9,44 @@ const port = process.env.PORT || 3000;
 const restaurants = [
     { 
         id: 1,
-        nombre: "Burger King",
-        calle: "Av Hipolito Yrigoyen",
-        numero: 2500,
-        barrio: "Banfield",
-        localidad: "Lomas de Zamora",
-        provincia: "Buenos Aires",
-        pais: "Argentina",
-        geoLatitud:"51° 30' 30'' N",
-        geoLongitud: "0° 7' 32'' O",
-        dias: ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"],
-        apertura: 14,
-        cierre: 00,
-        cerradoTemp: false,
-        fotos:[],
-        especialidad: "rapida",
-        precioMin: 125,
-        precioMax: 6000
+        name: "Burger King",
+        street: "Av Hipolito Yrigoyen",
+        streetNumber: 2500,
+        neighbourhood: "Banfield",
+        state: "Lomas de Zamora",
+        province: "Buenos Aires",
+        country: "Argentina",
+        latitude:"51° 30' 30'' N",
+        longitude: "0° 7' 32'' O",
+        days: ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"],
+        open: 14,
+        close: 00,
+        isClosed: false,
+        photos:[],
+        specialty: "rapida",
+        minPrice: 125,
+        maxPrice: 6000
     },
 
     { 
         id: 2,
-        nombre: "Starbucks",
-        calle: "Colombres",
-        numero: 200,
-        barrio: "Las Lomitas",
-        localidad: "Lomas de Zamora",
-        provincia: "Buenos Aires",
-        pais: "Argentina",
-        geoLatitud:"51° 30' 30'' N",
-        geoLongitud: "0° 7' 32'' O",
-        dias: ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado"],
-        apertura: 14,
-        cierre: 00,
-        cerradoTemp: false,
-        fotos:[],
-        especialidad: "cafe",
-        precioMin: 250,
-        precioMax: 4000
+        name: "Starbucks",
+        street: "Colombres",
+        streetNumber: 200,
+        neighbourhood: "Las Lomitas",
+        state: "Lomas de Zamora",
+        province: "Buenos Aires",
+        country: "Argentina",
+        latitude:"51° 30' 30'' N",
+        longitude: "0° 7' 32'' O",
+        days: ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado"],
+        open: 14,
+        close: 00,
+        isClosed: false,
+        photos:[],
+        specialty: "cafe",
+        minPrice: 250,
+        maxPrice: 4000
     }
 ];
 
@@ -66,22 +66,22 @@ app.post('/api/v1/restaurants', (req, res) => {
 
     const restaurant = {
         id: restaurants.length + 1,
-        nombre: req.body.nombre,
-        calle: req.body.calle,
-        numero: req.body.numero,
-        barrio: req.body.barrio,
-        localidad: req.body.localidad,
-        provincia: req.body.provincia,
-        pais: req.body.pais,
-        geoLatitud: req.body.geoLatitud,
-        geoLongitud: req.body.geoLongitud,
-        dias: req.body.dias,
-        apertura: req.body.apertura,
-        cierre: req.body.cierre,
-        cerradoTemp: req.body.cerradoTemp,
-        especialidad: req.body.tipoComida,
-        precioMin: req.body.precioMin,
-        precioMax: req.body.precioMax
+        name: req.body.name,
+        street: req.body.street,
+        streetNumber: req.body.streetNumber,
+        neighbourhood: req.body.neighbourhood,
+        state: req.body.state,
+        province: req.body.province,
+        country: req.body.country,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+        days: req.body.days,
+        open: req.body.open,
+        close: req.body.close,
+        isClosed: req.body.isClosed,
+        specialty: req.body.tipoComida,
+        minPrice: req.body.minPrice,
+        maxPrice: req.body.maxPrice
     };
     restaurants.push(restaurant);
     res.send(restaurant);
@@ -93,27 +93,26 @@ app.put('/api/v1/restaurants/:id', (req, res) => {
 
     const {error} = validateRestaurant(req.body);
     if(error) return res.status(400).send(error.details[0].message);
-    restaurant.nombre = req.body.nombre;
-    restaurant.calle = req.body.calle;
-    restaurant.numero = req.body.numero;
-    restaurant.barrio = req.body.barrio;
-    restaurant.localidad = req.body.localidad;
-    restaurant.provincia = req.body.provincia;
-    restaurant.pais = req.body.pais;
-    restaurant.geoLatitud = req.body.geoLatitud;
-    restaurant.geoLongitud = req.body.geoLongitud;
-    restaurant.dias = req.body.dias;
-    restaurant.apertura = req.body.apertura;
-    restaurant.cierre = req.body.cierre;
-    restaurant.cerradoTemp = req.body.cerradoTemp;
-    restaurant.especialidad = req.body.especialidad;
-    restaurant.precioMin = req.body.precioMin;
-    restaurant.precioMax = req.body.precioMax;
+    restaurant.name = req.body.name;
+    restaurant.street = req.body.street;
+    restaurant.streetNumber = req.body.streetNumber;
+    restaurant.neighbourhood = req.body.neighbourhood;
+    restaurant.state = req.body.state;
+    restaurant.province = req.body.province;
+    restaurant.country = req.body.country;
+    restaurant.latitude = req.body.latitude;
+    restaurant.longitude = req.body.longitude;
+    restaurant.days = req.body.days;
+    restaurant.open = req.body.open;
+    restaurant.close = req.body.close;
+    restaurant.isClosed = req.body.isClosed;
+    restaurant.specialty = req.body.specialty;
+    restaurant.minPrice = req.body.minPrice;
+    restaurant.maxPrice = req.body.maxPrice;
 
     res.send(restaurant);
 });
 
-//NO FUNCIONA
 app.delete('api/v1/restaurants/:id', (req, res) => {
     const restaurant = restaurants.find(r => r.id === parseInt(req.params.id));
     if(!restaurant) return res.status(400).send('El restaurante no se encontró');
@@ -126,23 +125,23 @@ app.delete('api/v1/restaurants/:id', (req, res) => {
 
 function validateRestaurant(restaurant){
     const schema = {
-        nombre: Joi.string().min(1).required(),
-        calle: Joi.string().min(3).required(),
-        numero: Joi.number().integer().required(),
-        barrio: Joi.string().min(3).required(),
-        localidad: Joi.string().min(3).required(),
-        provincia: Joi.string().min(3).required(),
-        pais: Joi.string().min(3).required(),
-        geoLatitud: Joi.string().min(2).required(),
-        geoLongitud: Joi.string().min(2).required(),
-        dias: Joi.array().items(Joi.string()).required(),
-        apertura: Joi.number().integer().required(),
-        cierre: Joi.number().integer().required(),
-        cerradoTemp: Joi.boolean().required(),
-        fotos: Joi.array().items(Joi.string()).required(),
-        especialidad: Joi.string().min(3).required(),
-        precioMin: Joi.number().integer().required(),
-        precioMax: Joi.number().integer().required()
+        name: Joi.string().min(1).required(),
+        street: Joi.string().min(3).required(),
+        streetNumber: Joi.number().integer().required(),
+        neighbourhood: Joi.string().min(3).required(),
+        state: Joi.string().min(3).required(),
+        province: Joi.string().min(3).required(),
+        country: Joi.string().min(3).required(),
+        latitude: Joi.string().min(2).required(),
+        longitude: Joi.string().min(2).required(),
+        days: Joi.array().items(Joi.string()).required(),
+        open: Joi.number().integer().required(),
+        close: Joi.number().integer().required(),
+        isClosed: Joi.boolean().required(),
+        photos: Joi.array().items(Joi.string()).required(),
+        specialty: Joi.string().min(3).required(),
+        minPrice: Joi.number().integer().required(),
+        maxPrice: Joi.number().integer().required()
     };
 
     return Joi.validate(restaurant, schema);

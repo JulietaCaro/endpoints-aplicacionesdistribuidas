@@ -9,24 +9,24 @@ const port = process.env.PORT || 3000;
 const itemComidas = [
     {
         id: 1,
-        nombre: "Cafe con leche + 3 medialunas",
-        precio: 550,
-        fotos: [],
-        ingredientes: ["cafe", "leche", "medialunas"],
-        aptoCeliaco: false,
-        aptoVegano: false,
-        esPostre: false
+        name: "Cafe con leche + 3 medialunas",
+        price: 550,
+        photos: [],
+        ingredients: ["cafe", "leche", "medialunas"],
+        celiac: false,
+        vegan: false,
+        isDessert: false
     },
 
     {
         id: 2,
-        nombre: "Hamburgesa triple con papas fritas",
-        precio: 1500,
-        fotos: ["hamburguesa.jpg"],
-        ingredientes: [],
-        aptoCeliaco: false,
-        aptoVegano: true,
-        esPostre: false
+        name: "Hamburgesa triple con papas fritas",
+        price: 1500,
+        photos: ["hamburguesa.jpg"],
+        ingredients: [],
+        celiac: false,
+        vegan: true,
+        isDessert: false
     }
 ];
 
@@ -46,13 +46,13 @@ app.post('/api/v1/restaurants/1/menues/categories/1/dishes', (req, res) => {
 
     const item = {
         id: itemComidas.length + 1,
-        nombre: req.body.nombre,
-        precio: req.body.precio,
-        fotos: req.body.fotos,
-        ingredientes: req.body.ingredientes,
-        aptoCeliaco: req.body.aptoCeliaco,
-        aptoVegano: req.body.aptoVegano,
-        esPostre: req.body.esPostre
+        name: req.body.name,
+        price: req.body.price,
+        photos: req.body.photos,
+        ingredients: req.body.ingredients,
+        celiac: req.body.celiac,
+        vegan: req.body.vegan,
+        isDessert: req.body.isDessert
     };
     itemComidas.push(item);
     res.send(item);
@@ -64,13 +64,13 @@ app.put('/api/v1/restaurants/1/menues/categories/1/dishes/:id', (req, res) => {
 
     const { error} = validateItem(req.body);
     if(error) return res.status(400).send(error.details[0].message);
-    item.nombre = req.body.nombre;
-    item.precio = req.body.precio;
-    item.fotos = req.body.fotos;
-    item.ingredientes = req.body.ingredientes;
-    item.aptoCeliaco = req.body.aptoCeliaco;
-    item.aptoVegano = req.body.aptoVegano;
-    item.esPostre = req.body.esPostre;
+    item.name = req.body.name;
+    item.price = req.body.price;
+    item.photos = req.body.photos;
+    item.ingredients = req.body.ingredients;
+    item.celiac = req.body.celiac;
+    item.vegan = req.body.vegan;
+    item.isDessert = req.body.isDessert;
 
     res.send(item);
 });
@@ -88,13 +88,13 @@ app.delete('/api/v1/restaurants/1/menues/categories/1/dishes/:id', (req, res) =>
 
 function validateItem(item){
     const schema = {
-        nombre: Joi.string().min(3).required(),
-        precio: Joi.number().required(),
-        fotos: Joi.array().items(Joi.string()).optional(),
-        ingredientes: Joi.array().items(Joi.string()).optional(),
-        aptoCeliaco: Joi.boolean().required(),
-        aptoVegano: Joi.boolean().required(),
-        esPostre: Joi.boolean().required()
+        name: Joi.string().min(3).required(),
+        price: Joi.number().required(),
+        photos: Joi.array().items(Joi.string()).optional(),
+        ingredients: Joi.array().items(Joi.string()).optional(),
+        celiac: Joi.boolean().required(),
+        vegan: Joi.boolean().required(),
+        isDessert: Joi.boolean().required()
     };
 
     return Joi.validate(item, schema);

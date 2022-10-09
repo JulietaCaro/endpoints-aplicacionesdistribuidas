@@ -20,7 +20,7 @@ const users = [
         id: 2, 
         email: "maria@mail.com.ar", 
         password: "hola", 
-        "name": "", 
+        name: "", 
         profilePic: "foto.jpg", 
         isOwner: false
     }
@@ -67,7 +67,6 @@ app.put('/api/v1/users/:id', (req, res) => {
 });
 
 
-//NO FUNCIONA
 app.delete('api/v1/users/:id', (req, res) => {
     const user = users.find(u => u.id === parseInt(req.params.id));
     if(!user) return res.status(400).send("El usuario no se encontró");

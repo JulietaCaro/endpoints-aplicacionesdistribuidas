@@ -101,7 +101,6 @@ app.put('/api/v1/restaurants/1/menues/categories/:id', (req, res) => {
     res.send(cat);
 });
 
-//FUNCIONA
 app.delete('/api/v1/restaurants/1/menues/categories/:id', (req, res) => {
     const cat = categorias.find(c => c.id === parseInt(req.params.id));
     if(!cat) return res.status(400).send("La categoría no se encontró");
